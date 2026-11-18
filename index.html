@@ -1153,5 +1153,88 @@
             showToast(name + ' — the store page opens at checkout, with cash back tracked automatically.');
         }
     </script>
+
+    <!-- Third-party tools -->
+    <script>
+    "use strict";
+    /* ============ third-party tools — the single wiring point ============
+       Fill in a value to switch that tool on; leave it empty and the tool
+       is completely off: nothing is loaded, nothing is sent, and the page
+       behaves exactly as it does with all three empty. The IDs/keys come
+       from the tool accounts and are filled in here only — nowhere else. */
+    var NM_TOOLS = { clarityId: "zfqk3mzy4i", sentryDsn: "https://82842e1baa67f1bc75f4d3a4369c2295@o4512454544064512.ingest.us.sentry.io/4512454547668992", turnstileSiteKey: "" };
+
+    /* ---- Microsoft Clarity (only when clarityId is set) ---- */
+    if (NM_TOOLS.clarityId) {
+        try {
+            (function(c,l,a,r,i,t,y){
+                c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+                t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+                y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+            })(window, document, "clarity", "script", NM_TOOLS.clarityId);
+        } catch (e) { /* Clarity is optional — it can never break the page */ }
+    }
+
+    /* ---- Sentry, browser side (only when sentryDsn is set) ----
+       Loads the official Sentry Browser SDK from the Sentry CDN and
+       initialises it with the project DSN once it arrives. Everything is
+       wrapped so a CDN failure can never break the page. */
+    if (NM_TOOLS.sentryDsn) {
+        try {
+            (function(){
+                var s = document.createElement("script");
+                s.src = "https://browser.sentry-cdn.com/8.38.0/bundle.min.js";
+                s.crossOrigin = "anonymous";
+                s.async = true;
+                s.onload = function(){ try { if (window.Sentry) window.Sentry.init({ dsn: NM_TOOLS.sentryDsn }); } catch (e) {} };
+                s.onerror = function(){ /* SDK unreachable — the page carries on without it */ };
+                (document.head || document.documentElement).appendChild(s);
+            })();
+        } catch (e) { /* Sentry is optional — it can never break the page */ }
+    }
+
+    /* ---- Cloudflare Turnstile (only when turnstileSiteKey is set) ----
+       turnstileSiteKey stays empty until a widget exists for this domain,
+       so for now this loader no-ops: nothing is loaded and nothing runs.
+       When a key is filled in, an invisible widget keeps a fresh token
+       ready in the background (window.nmTurnstileToken()); a visitor is
+       never blocked by this check. */
+    var nmTs = { token: "", at: 0, widgetId: null };
+    function nmTurnstileExecute(){
+        try { if (window.turnstile && nmTs.widgetId !== null) window.turnstile.execute(nmTs.widgetId); } catch (e) {}
+    }
+    function nmTurnstileToken(){
+        if (!NM_TOOLS.turnstileSiteKey) return "";
+        if (nmTs.token && (Date.now() - nmTs.at) < 240000) return nmTs.token;
+        nmTurnstileExecute(); /* ask for a fresh one for next time */
+        return "";
+    }
+    window.nmTurnstileReady = function(){
+        try {
+            var host = document.createElement("div");
+            host.style.cssText = "position:fixed;bottom:0;right:0;width:1px;height:1px;overflow:hidden";
+            (document.body || document.documentElement).appendChild(host);
+            nmTs.widgetId = window.turnstile.render(host, {
+                sitekey: NM_TOOLS.turnstileSiteKey,
+                size: "invisible",
+                callback: function(token){ nmTs.token = token || ""; nmTs.at = Date.now(); },
+                "expired-callback": function(){ nmTs.token = ""; nmTs.at = 0; nmTurnstileExecute(); },
+                "error-callback": function(){ nmTs.token = ""; nmTs.at = 0; }
+            });
+            nmTurnstileExecute();
+        } catch (e) { /* the widget is optional — nothing depends on it */ }
+    };
+    if (NM_TOOLS.turnstileSiteKey) {
+        try {
+            (function(){
+                var s = document.createElement("script");
+                s.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?onload=nmTurnstileReady&render=explicit";
+                s.async = true; s.defer = true;
+                (document.head || document.documentElement).appendChild(s);
+            })();
+        } catch (e) { /* Turnstile is optional — it can never break the page */ }
+    }
+    /* ============ end third-party tools ============ */
+    </script>
 </body>
 </html>
