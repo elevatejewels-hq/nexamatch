@@ -19,6 +19,16 @@
         .leaflet-popup-content a { color: #2563eb; font-weight: 600; }
         .store-card { cursor: pointer; }
         .chip-active { background: #2563eb !important; color: #fff !important; border-color: #2563eb !important; }
+        /* Rotating specials banner */
+        .specials-slide { grid-column: 1; grid-row: 1; opacity: 0; pointer-events: none; transition: opacity .7s ease; }
+        .specials-slide.active { opacity: 1; pointer-events: auto; }
+        .specials-dot { width: 8px; height: 8px; border-radius: 9999px; background: rgba(255,255,255,.45); transition: all .3s ease; cursor: pointer; border: none; padding: 0; }
+        .specials-dot.active { width: 22px; background: #fff; }
+        /* Favorites glass tiles (icon only, no captions) */
+        .fav-scroll { scrollbar-width: none; }
+        .fav-scroll::-webkit-scrollbar { display: none; }
+        .glass-tile { background: rgba(255,255,255,.55); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); border: 1px solid rgba(255,255,255,.8); box-shadow: 0 10px 25px rgba(15,42,82,.12), inset 0 1px 0 rgba(255,255,255,.85); border-radius: 1.25rem; transition: transform .25s ease, box-shadow .25s ease; }
+        .glass-tile:hover { transform: translateY(-3px); box-shadow: 0 16px 32px rgba(15,42,82,.18), inset 0 1px 0 rgba(255,255,255,.85); }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col">
@@ -140,6 +150,79 @@
             </div>
         </div>
     </section>
+
+    <!-- Specials Banner (rotating, directly under the hero) -->
+    <div class="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-10">
+        <section id="specialsBanner" class="relative overflow-hidden rounded-3xl shadow-xl text-white" style="background: linear-gradient(120deg, #0b2447 0%, #1d4ed8 55%, #0891b2 100%);" aria-label="Specials">
+            <div class="absolute -left-16 -bottom-24 w-72 h-72 bg-cyan-400/20 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="absolute -right-10 -top-24 w-72 h-72 bg-blue-300/20 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="absolute top-4 right-4 h-10 w-32 overflow-hidden rounded-lg shadow-md z-20 hidden md:flex items-center justify-center">
+                <img src="assets/logo-nexamatch-dark.jpg" alt="NexaMatch" class="h-10 w-auto max-w-none" style="transform: scale(2.05);">
+            </div>
+            <div class="grid relative z-10">
+                <!-- Slide 1: Elevate Jewels -->
+                <div class="specials-slide active">
+                    <div class="flex flex-col sm:flex-row items-center gap-6 px-6 sm:px-10 pt-8 sm:pt-10 pb-14">
+                        <div class="flex-1 text-center sm:text-left">
+                            <span class="inline-block text-[10px] sm:text-xs font-bold uppercase tracking-widest bg-white/15 border border-white/25 px-3 py-1 rounded-full mb-3">Featured Special</span>
+                            <h3 class="text-2xl sm:text-4xl font-extrabold leading-tight mb-2">Fine Jewelry, Matched to You</h3>
+                            <p class="text-blue-100 text-sm sm:text-base mb-5">Shop <strong class="text-white">Elevate Jewels</strong> through NexaMatch and get <strong class="text-white">2% Cash Back</strong> on every piece.</p>
+                            <button onclick="bannerScrollTo('local-stores')" class="bg-white text-blue-800 px-6 py-3 rounded-xl font-bold text-sm shadow-lg hover:bg-blue-50 transition">Shop Elevate Jewels</button>
+                        </div>
+                        <div class="relative shrink-0 hidden sm:flex w-44 h-44 lg:w-52 lg:h-52 items-center justify-center">
+                            <div class="absolute inset-0 rounded-full bg-white/10 border border-white/20"></div>
+                            <div class="absolute inset-4 rounded-full bg-white/10 border border-white/15"></div>
+                            <i class="fa-solid fa-gem text-6xl lg:text-7xl text-cyan-300 drop-shadow-lg"></i>
+                            <i class="fa-solid fa-star absolute top-5 right-6 text-amber-300 text-lg"></i>
+                            <i class="fa-solid fa-star absolute bottom-7 left-5 text-cyan-200 text-sm"></i>
+                        </div>
+                    </div>
+                </div>
+                <!-- Slide 2: Infinite Lighting -->
+                <div class="specials-slide">
+                    <div class="flex flex-col sm:flex-row items-center gap-6 px-6 sm:px-10 pt-8 sm:pt-10 pb-14">
+                        <div class="flex-1 text-center sm:text-left">
+                            <span class="inline-block text-[10px] sm:text-xs font-bold uppercase tracking-widest bg-white/15 border border-white/25 px-3 py-1 rounded-full mb-3">Featured Special</span>
+                            <h3 class="text-2xl sm:text-4xl font-extrabold leading-tight mb-2">Lighting for Every Room</h3>
+                            <p class="text-blue-100 text-sm sm:text-base mb-5">Brighten every room with <strong class="text-white">Infinite Lighting</strong> and get <strong class="text-white">2% Cash Back</strong> on your order.</p>
+                            <button onclick="bannerScrollTo('local-stores')" class="bg-white text-blue-800 px-6 py-3 rounded-xl font-bold text-sm shadow-lg hover:bg-blue-50 transition">Shop Infinite Lighting</button>
+                        </div>
+                        <div class="relative shrink-0 hidden sm:flex w-44 h-44 lg:w-52 lg:h-52 items-center justify-center">
+                            <div class="absolute inset-0 rounded-full bg-white/10 border border-white/20"></div>
+                            <div class="absolute inset-4 rounded-full bg-white/10 border border-white/15"></div>
+                            <i class="fa-solid fa-lightbulb text-6xl lg:text-7xl text-amber-300 drop-shadow-lg"></i>
+                            <i class="fa-solid fa-star absolute top-6 left-6 text-cyan-200 text-sm"></i>
+                            <i class="fa-solid fa-star absolute bottom-6 right-7 text-amber-200 text-base"></i>
+                        </div>
+                    </div>
+                </div>
+                <!-- Slide 3: Local Stores -->
+                <div class="specials-slide">
+                    <div class="flex flex-col sm:flex-row items-center gap-6 px-6 sm:px-10 pt-8 sm:pt-10 pb-14">
+                        <div class="flex-1 text-center sm:text-left">
+                            <span class="inline-block text-[10px] sm:text-xs font-bold uppercase tracking-widest bg-white/15 border border-white/25 px-3 py-1 rounded-full mb-3">Shop Local Special</span>
+                            <h3 class="text-2xl sm:text-4xl font-extrabold leading-tight mb-2">Shop Local, Earn Back</h3>
+                            <p class="text-blue-100 text-sm sm:text-base mb-5">Get <strong class="text-white">2% Cash Back at 27 local stores</strong> in New Square &amp; Monsey — groceries, pharmacies, bakeries and more.</p>
+                            <button onclick="bannerScrollTo('local-stores')" class="bg-white text-blue-800 px-6 py-3 rounded-xl font-bold text-sm shadow-lg hover:bg-blue-50 transition">Browse Local Stores</button>
+                        </div>
+                        <div class="relative shrink-0 hidden sm:flex w-44 h-44 lg:w-52 lg:h-52 items-center justify-center">
+                            <div class="absolute inset-0 rounded-full bg-white/10 border border-white/20"></div>
+                            <div class="absolute inset-4 rounded-full bg-white/10 border border-white/15"></div>
+                            <i class="fa-solid fa-store text-6xl lg:text-7xl text-cyan-300 drop-shadow-lg"></i>
+                            <i class="fa-solid fa-location-dot absolute top-5 right-7 text-rose-300 text-xl"></i>
+                            <i class="fa-solid fa-basket-shopping absolute bottom-6 left-6 text-blue-200 text-lg"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Banner dots -->
+            <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 z-20">
+                <button type="button" class="specials-dot active" onclick="bannerGoTo(0)" aria-label="Show special 1"></button>
+                <button type="button" class="specials-dot" onclick="bannerGoTo(1)" aria-label="Show special 2"></button>
+                <button type="button" class="specials-dot" onclick="bannerGoTo(2)" aria-label="Show special 3"></button>
+            </div>
+        </section>
+    </div>
 
     <!-- Main Content Area -->
     <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12">
@@ -478,13 +561,65 @@
 
     </main>
 
+    <!-- Your Favorites & Visited — icon tiles only, no text under the tiles -->
+    <section id="favorites" class="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pb-12">
+        <div class="bg-gradient-to-r from-blue-50 via-white to-cyan-50 border border-blue-100 rounded-3xl px-6 sm:px-8 py-7 shadow-sm">
+            <div class="flex items-center justify-between mb-5">
+                <h2 class="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">Your favorites &amp; visited</h2>
+                <a href="#local-stores" class="text-sm font-semibold text-blue-600 hover:underline flex items-center gap-1">See All <i class="fa-solid fa-chevron-right text-xs"></i></a>
+            </div>
+            <div class="fav-scroll flex gap-4 overflow-x-auto pb-1 px-1 -mx-1">
+                <button type="button" class="fav-tile shrink-0" onclick="favNational('Target')" aria-label="Target">
+                    <span class="glass-tile flex items-center justify-center w-36 h-24 sm:w-40 sm:h-28 p-3">
+                        <span class="w-full h-full rounded-xl flex items-center justify-center text-white font-extrabold text-xl tracking-tight shadow-inner" style="background:#cc0000;">target</span>
+                    </span>
+                </button>
+                <button type="button" class="fav-tile shrink-0" onclick="favNational('Walmart')" aria-label="Walmart">
+                    <span class="glass-tile flex items-center justify-center w-36 h-24 sm:w-40 sm:h-28 p-3">
+                        <span class="w-full h-full rounded-xl flex items-center justify-center text-white font-extrabold text-lg tracking-tight shadow-inner" style="background:#0071ce;">Walmart</span>
+                    </span>
+                </button>
+                <button type="button" class="fav-tile shrink-0" onclick="favNational('AliExpress')" aria-label="AliExpress">
+                    <span class="glass-tile flex items-center justify-center w-36 h-24 sm:w-40 sm:h-28 p-3">
+                        <span class="w-full h-full rounded-xl flex items-center justify-center text-white font-extrabold text-base tracking-tight shadow-inner" style="background:#e62e04;">AliExpress</span>
+                    </span>
+                </button>
+                <button type="button" class="fav-tile shrink-0" onclick="favNational('QVC')" aria-label="QVC">
+                    <span class="glass-tile flex items-center justify-center w-36 h-24 sm:w-40 sm:h-28 p-3">
+                        <span class="w-full h-full rounded-xl flex items-center justify-center text-white font-extrabold text-2xl tracking-widest shadow-inner" style="background:#002d62;">QVC</span>
+                    </span>
+                </button>
+                <button type="button" class="fav-tile shrink-0" onclick="favNational('Priceline')" aria-label="Priceline">
+                    <span class="glass-tile flex items-center justify-center w-36 h-24 sm:w-40 sm:h-28 p-3">
+                        <span class="w-full h-full rounded-xl flex items-center justify-center text-white font-extrabold text-lg tracking-tight shadow-inner" style="background:#0068ef;">priceline</span>
+                    </span>
+                </button>
+                <button type="button" class="fav-tile shrink-0" onclick="favNational('H&M')" aria-label="H&M">
+                    <span class="glass-tile flex items-center justify-center w-36 h-24 sm:w-40 sm:h-28 p-3">
+                        <span class="w-full h-full rounded-xl flex items-center justify-center text-white font-extrabold text-2xl tracking-tight shadow-inner" style="background:#e50010;">H&amp;M</span>
+                    </span>
+                </button>
+                <button type="button" class="fav-tile shrink-0" onclick="favGoLocal('Rockland Kosher Supermarket')" aria-label="Rockland Kosher Supermarket">
+                    <span class="glass-tile flex items-center justify-center w-36 h-24 sm:w-40 sm:h-28 p-3">
+                        <span class="w-full h-full rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-white font-extrabold text-3xl shadow-inner">RK</span>
+                    </span>
+                </button>
+                <button type="button" class="fav-tile shrink-0" onclick="favGoLocal('Pharmacy Plus')" aria-label="Pharmacy Plus">
+                    <span class="glass-tile flex items-center justify-center w-36 h-24 sm:w-40 sm:h-28 p-3">
+                        <span class="w-full h-full rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-extrabold text-3xl shadow-inner">P+</span>
+                    </span>
+                </button>
+            </div>
+        </div>
+    </section>
+
     <!-- Footer -->
     <footer class="bg-slate-900 text-slate-400 pt-16 pb-12 border-t border-slate-800">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-4 gap-10 mb-12">
             <div>
                 <div class="mb-4">
-                    <div class="bg-white rounded-xl h-12 w-40 overflow-hidden flex items-center justify-center">
-                        <img src="assets/logo-nexamatch.jpg" alt="NexaMatch" class="h-12 w-auto max-w-none" style="transform: scale(2.05);">
+                    <div class="h-12 w-40 overflow-hidden flex items-center justify-start">
+                        <img src="assets/logo-nexamatch-dark.jpg" alt="NexaMatch" class="h-12 w-auto max-w-none" style="transform: scale(2.05);">
                     </div>
                 </div>
                 <p class="text-xs leading-relaxed text-slate-400 mb-4">
@@ -975,6 +1110,48 @@
         renderStoreChips();
         initStoreMap();
         filterLocalStores();
+    </script>
+
+    <!-- Specials Banner rotation + Favorites tiles -->
+    <script>
+        // --- Rotating specials banner ---
+        let specialsIdx = 0;
+        let specialsTimer = null;
+        function bannerGoTo(n) {
+            const slides = document.querySelectorAll('.specials-slide');
+            const dots = document.querySelectorAll('.specials-dot');
+            if (!slides.length) return;
+            specialsIdx = ((n % slides.length) + slides.length) % slides.length;
+            slides.forEach((s, i) => s.classList.toggle('active', i === specialsIdx));
+            dots.forEach((d, i) => d.classList.toggle('active', i === specialsIdx));
+        }
+        function bannerAutoAdvance() { bannerGoTo(specialsIdx + 1); }
+        function bannerScrollTo(id) {
+            const el = document.getElementById(id);
+            if (el) el.scrollIntoView({ behavior: 'smooth' });
+        }
+        specialsTimer = setInterval(bannerAutoAdvance, 5000);
+        const specialsBannerEl = document.getElementById('specialsBanner');
+        if (specialsBannerEl) {
+            specialsBannerEl.addEventListener('mouseenter', () => clearInterval(specialsTimer));
+            specialsBannerEl.addEventListener('mouseleave', () => {
+                clearInterval(specialsTimer);
+                specialsTimer = setInterval(bannerAutoAdvance, 5000);
+            });
+        }
+
+        // --- Favorites tiles ---
+        function favGoLocal(name) {
+            const input = document.getElementById('storeSearchInput');
+            if (input) input.value = name;
+            if (typeof setStoreCategory === 'function') setStoreCategory('All');
+            if (typeof filterLocalStores === 'function') filterLocalStores();
+            const sec = document.getElementById('local-stores');
+            if (sec) sec.scrollIntoView({ behavior: 'smooth' });
+        }
+        function favNational(name) {
+            showToast(name + ' — the store page opens at checkout, with cash back tracked automatically.');
+        }
     </script>
 </body>
 </html>
