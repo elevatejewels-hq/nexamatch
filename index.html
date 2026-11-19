@@ -10,11 +10,17 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
     <style>
         body { font-family: 'Inter', sans-serif; }
+        /* Responsive guards: the page must never scroll sideways on any device */
+        html, body { overflow-x: clip; max-width: 100%; }
+        img, video, iframe { max-width: 100%; }
+        input, textarea, select { max-width: 100%; }
         .custom-scrollbar::-webkit-scrollbar { height: 6px; width: 6px; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
         .hero-gradient { background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%); }
         .accent-gradient { background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%); }
-        #storeMap { height: 420px; width: 100%; z-index: 0; }
+        #storeMap { height: 300px; width: 100%; max-width: 100%; z-index: 0; }
+        @media (min-width: 640px) { #storeMap { height: 420px; } }
+        @media (min-width: 1024px) { #storeMap { height: 480px; } }
         .leaflet-popup-content { font-family: 'Inter', sans-serif; font-size: 13px; line-height: 1.45; }
         .leaflet-popup-content a { color: #2563eb; font-weight: 600; }
         .store-card { cursor: pointer; }
@@ -34,19 +40,19 @@
 <body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col">
 
     <!-- Notification Banner -->
-    <div class="bg-gradient-to-r from-blue-600 to-cyan-500 text-white text-xs sm:text-sm py-2 px-4 text-center font-medium flex items-center justify-center gap-2 shadow-sm">
+    <div class="bg-gradient-to-r from-blue-600 to-cyan-500 text-white text-xs sm:text-sm py-2 px-3 sm:px-4 text-center font-medium flex flex-wrap items-center justify-center gap-2 shadow-sm leading-snug">
         <span>🚀 Welcome to NexaMatch! Unlock up to 15% Cash Back + Verified Top Connections Today.</span>
         <button onclick="closeBanner(this)" class="hover:opacity-75 transition ml-2 font-bold">&times;</button>
     </div>
 
     <!-- Main Navigation Bar -->
     <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
+        <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-2 sm:gap-4">
             
             <!-- Logo -->
             <div class="flex items-center cursor-pointer shrink-0" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
-                <div class="h-14 w-48 overflow-hidden flex items-center justify-center">
-                    <img src="assets/logo-nexamatch.jpg" alt="NexaMatch" class="h-14 w-auto max-w-none" style="transform: scale(2.05);">
+                <div class="h-11 w-32 sm:h-14 sm:w-48 max-w-[42vw] overflow-hidden flex items-center justify-center">
+                    <img src="assets/logo-nexamatch.jpg" alt="NexaMatch" class="h-11 sm:h-14 w-auto max-w-none" style="transform: scale(2.05);">
                 </div>
             </div>
 
@@ -63,11 +69,11 @@
 
             <!-- Right Nav Actions -->
             <div class="flex items-center gap-3">
-                <button onclick="openModal('rewardsModal')" class="hidden sm:flex items-center gap-2 text-xs font-semibold bg-blue-50 text-blue-700 px-3.5 py-2 rounded-full hover:bg-blue-100 transition">
+                <button onclick="openModal('rewardsModal')" class="hidden sm:flex shrink-0 items-center gap-2 text-xs font-semibold bg-blue-50 text-blue-700 px-3.5 py-2 rounded-full hover:bg-blue-100 transition">
                     <i class="fa-solid fa-gift text-cyan-500"></i>
                     <span>Refer & Earn $50+</span>
                 </button>
-                <button onclick="openModal('authModal')" class="accent-gradient text-white font-semibold text-xs sm:text-sm px-5 py-2.5 rounded-full shadow-lg shadow-cyan-500/20 hover:opacity-95 transition flex items-center gap-2">
+                <button onclick="openModal('authModal')" class="accent-gradient text-white font-semibold text-xs sm:text-sm px-4 sm:px-5 py-2.5 rounded-full shadow-lg shadow-cyan-500/20 hover:opacity-95 transition flex items-center gap-2 shrink-0">
                     <i class="fa-solid fa-user"></i>
                     <span class="hidden sm:inline">Sign In</span>
                 </button>
@@ -100,7 +106,7 @@
     </header>
 
     <!-- Hero Section with Dual Tabs -->
-    <section class="hero-gradient text-white py-14 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+    <section class="hero-gradient text-white py-10 sm:py-14 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
         <div class="absolute -right-20 -top-20 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
         <div class="absolute -left-20 -bottom-20 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl pointer-events-none"></div>
 
@@ -108,7 +114,7 @@
             <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-white/10 text-cyan-300 backdrop-blur-md mb-6 border border-white/10">
                 <i class="fa-solid fa-bolt"></i> The Universal Hub for Pricing, Deals & Elite Connections
             </span>
-            <h1 class="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight mb-6 leading-tight">
+            <h1 class="text-[clamp(1.7rem,6.2vw,3.75rem)] font-extrabold tracking-tight mb-6 leading-tight">
                 Find the Best Pricing. <br><span class="bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">Connect with Verified Talent & Deals.</span>
             </h1>
             <p class="text-slate-300 text-base sm:text-lg max-w-2xl mx-auto mb-10 font-normal">
@@ -117,21 +123,21 @@
 
             <!-- Search Mode Tabs -->
             <div class="max-w-2xl mx-auto bg-white/10 p-1.5 rounded-2xl backdrop-blur-md border border-white/15 flex gap-2 mb-6 shadow-2xl">
-                <button onclick="switchHeroTab('products')" id="tabProducts" class="flex-1 py-3 px-4 rounded-xl font-semibold text-sm transition flex items-center justify-center gap-2 bg-white text-slate-900 shadow-md">
+                <button onclick="switchHeroTab('products')" id="tabProducts" class="flex-1 min-w-0 py-3 px-2 sm:px-4 rounded-xl font-semibold text-xs sm:text-sm leading-tight transition flex items-center justify-center gap-2 bg-white text-slate-900 shadow-md">
                     <i class="fa-solid fa-bag-shopping text-blue-600"></i> Products & Deals
                 </button>
-                <button onclick="switchHeroTab('connections')" id="tabConnections" class="flex-1 py-3 px-4 rounded-xl font-semibold text-sm transition flex items-center justify-center gap-2 text-white hover:bg-white/10">
+                <button onclick="switchHeroTab('connections')" id="tabConnections" class="flex-1 min-w-0 py-3 px-2 sm:px-4 rounded-xl font-semibold text-xs sm:text-sm leading-tight transition flex items-center justify-center gap-2 text-white hover:bg-white/10">
                     <i class="fa-solid fa-user-check text-cyan-400"></i> Find Connections & Talent
                 </button>
             </div>
 
             <!-- Dynamic Search Panel inside Hero -->
             <div id="heroSearchPanel" class="max-w-2xl mx-auto bg-white p-3 rounded-2xl shadow-2xl flex items-center gap-2">
-                <div class="flex-1 flex items-center pl-3 text-slate-400">
-                    <i class="fa-solid fa-search text-lg mr-3"></i>
-                    <input type="text" id="heroQueryInput" placeholder="Search brands like Target, Samsung, Expedia, or QVC..." class="w-full py-2 text-slate-800 text-sm sm:text-base outline-none bg-transparent">
+                <div class="flex-1 min-w-0 flex items-center pl-2 sm:pl-3 text-slate-400">
+                    <i class="fa-solid fa-search text-lg mr-2 sm:mr-3 shrink-0"></i>
+                    <input type="text" id="heroQueryInput" placeholder="Search brands like Target, Samsung, Expedia, or QVC..." class="w-full min-w-0 py-2 text-slate-800 text-sm sm:text-base outline-none bg-transparent">
                 </div>
-                <button onclick="performHeroSearch()" class="accent-gradient text-white px-6 py-3 rounded-xl font-bold text-sm shadow-lg shadow-cyan-500/20 hover:opacity-95 transition">
+                <button onclick="performHeroSearch()" class="accent-gradient text-white px-4 sm:px-6 py-3 rounded-xl font-bold text-sm shadow-lg shadow-cyan-500/20 hover:opacity-95 transition shrink-0">
                     Explore
                 </button>
             </div>
@@ -169,10 +175,10 @@
                             <p class="text-blue-100 text-sm sm:text-base mb-5">Shop <strong class="text-white">Elevate Jewels</strong> through NexaMatch and get <strong class="text-white">2% Cash Back</strong> on every piece.</p>
                             <button onclick="bannerScrollTo('local-stores')" class="bg-white text-blue-800 px-6 py-3 rounded-xl font-bold text-sm shadow-lg hover:bg-blue-50 transition">Shop Elevate Jewels</button>
                         </div>
-                        <div class="relative shrink-0 hidden sm:flex w-44 h-44 lg:w-52 lg:h-52 items-center justify-center">
+                        <div class="relative shrink-0 flex w-24 h-24 sm:w-44 sm:h-44 lg:w-52 lg:h-52 items-center justify-center">
                             <div class="absolute inset-0 rounded-full bg-white/10 border border-white/20"></div>
                             <div class="absolute inset-4 rounded-full bg-white/10 border border-white/15"></div>
-                            <i class="fa-solid fa-gem text-6xl lg:text-7xl text-cyan-300 drop-shadow-lg"></i>
+                            <i class="fa-solid fa-gem text-4xl sm:text-6xl lg:text-7xl text-cyan-300 drop-shadow-lg"></i>
                             <i class="fa-solid fa-star absolute top-5 right-6 text-amber-300 text-lg"></i>
                             <i class="fa-solid fa-star absolute bottom-7 left-5 text-cyan-200 text-sm"></i>
                         </div>
@@ -187,10 +193,10 @@
                             <p class="text-blue-100 text-sm sm:text-base mb-5">Brighten every room with <strong class="text-white">Infinite Lighting</strong> and get <strong class="text-white">2% Cash Back</strong> on your order.</p>
                             <button onclick="bannerScrollTo('local-stores')" class="bg-white text-blue-800 px-6 py-3 rounded-xl font-bold text-sm shadow-lg hover:bg-blue-50 transition">Shop Infinite Lighting</button>
                         </div>
-                        <div class="relative shrink-0 hidden sm:flex w-44 h-44 lg:w-52 lg:h-52 items-center justify-center">
+                        <div class="relative shrink-0 flex w-24 h-24 sm:w-44 sm:h-44 lg:w-52 lg:h-52 items-center justify-center">
                             <div class="absolute inset-0 rounded-full bg-white/10 border border-white/20"></div>
                             <div class="absolute inset-4 rounded-full bg-white/10 border border-white/15"></div>
-                            <i class="fa-solid fa-lightbulb text-6xl lg:text-7xl text-amber-300 drop-shadow-lg"></i>
+                            <i class="fa-solid fa-lightbulb text-4xl sm:text-6xl lg:text-7xl text-amber-300 drop-shadow-lg"></i>
                             <i class="fa-solid fa-star absolute top-6 left-6 text-cyan-200 text-sm"></i>
                             <i class="fa-solid fa-star absolute bottom-6 right-7 text-amber-200 text-base"></i>
                         </div>
@@ -205,10 +211,10 @@
                             <p class="text-blue-100 text-sm sm:text-base mb-5">Get <strong class="text-white">2% Cash Back at 27 local stores</strong> in New Square &amp; Monsey — groceries, pharmacies, bakeries and more.</p>
                             <button onclick="bannerScrollTo('local-stores')" class="bg-white text-blue-800 px-6 py-3 rounded-xl font-bold text-sm shadow-lg hover:bg-blue-50 transition">Browse Local Stores</button>
                         </div>
-                        <div class="relative shrink-0 hidden sm:flex w-44 h-44 lg:w-52 lg:h-52 items-center justify-center">
+                        <div class="relative shrink-0 flex w-24 h-24 sm:w-44 sm:h-44 lg:w-52 lg:h-52 items-center justify-center">
                             <div class="absolute inset-0 rounded-full bg-white/10 border border-white/20"></div>
                             <div class="absolute inset-4 rounded-full bg-white/10 border border-white/15"></div>
-                            <i class="fa-solid fa-store text-6xl lg:text-7xl text-cyan-300 drop-shadow-lg"></i>
+                            <i class="fa-solid fa-store text-4xl sm:text-6xl lg:text-7xl text-cyan-300 drop-shadow-lg"></i>
                             <i class="fa-solid fa-location-dot absolute top-5 right-7 text-rose-300 text-xl"></i>
                             <i class="fa-solid fa-basket-shopping absolute bottom-6 left-6 text-blue-200 text-lg"></i>
                         </div>
@@ -229,8 +235,8 @@
 
         <!-- Category Shortcuts -->
         <section id="categories">
-            <div class="flex items-center justify-between mb-6">
-                <h2 class="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">Top Categories & Quick Access</h2>
+            <div class="flex flex-wrap items-center justify-between gap-3 mb-6">
+                <h2 class="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight min-w-0">Top Categories & Quick Access</h2>
                 <a href="#" onclick="showToast('Showing all categories')" class="text-sm font-semibold text-blue-600 hover:underline flex items-center gap-1">See All <i class="fa-solid fa-chevron-right text-xs"></i></a>
             </div>
             <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4">
@@ -287,12 +293,12 @@
 
         <!-- Trending Deals & Cash Back Section -->
         <section id="deals">
-            <div class="flex items-center justify-between mb-6">
-                <div>
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
+                <div class="min-w-0">
                     <h2 class="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">🔥 Trending Cash-Back & Deals</h2>
                     <p class="text-slate-500 text-xs sm:text-sm">Verified discounts and maximum savings guaranteed across top merchants.</p>
                 </div>
-                <div class="flex gap-2">
+                <div class="flex gap-2 shrink-0 flex-wrap">
                     <button onclick="sortDeals('popular')" id="sortPop" class="px-3 py-1.5 text-xs font-semibold bg-blue-600 text-white rounded-lg shadow-sm">Popular</button>
                     <button onclick="sortDeals('cashback')" id="sortCb" class="px-3 py-1.5 text-xs font-semibold bg-white text-slate-600 border border-slate-200 rounded-lg hover:bg-slate-50">Highest Cash Back</button>
                 </div>
@@ -439,7 +445,7 @@
         </section>
 
         <!-- Local Stores & Map Section -->
-        <section id="local-stores" class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm">
+        <section id="local-stores" class="bg-white p-4 sm:p-8 rounded-3xl border border-slate-200 shadow-sm">
             <div class="mb-6">
                 <span class="text-xs font-bold uppercase tracking-widest text-blue-600 bg-blue-50 px-3 py-1 rounded-full">Shop Local</span>
                 <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-2">Local Stores Near You — New Square &amp; Monsey</h2>
@@ -466,12 +472,12 @@
             <div id="storeCategoryChips" class="flex flex-wrap gap-2 mb-6"></div>
 
             <!-- Store Directory Grid -->
-            <div id="localStoresGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+            <div id="localStoresGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5"></div>
             <p id="noStoresMsg" class="hidden text-center text-slate-400 text-sm py-8">No stores match your search. Try a different name or category.</p>
         </section>
 
         <!-- Talent & Professional Connection Section -->
-        <section id="talent" class="bg-white p-8 rounded-3xl border border-slate-200 shadow-sm">
+        <section id="talent" class="bg-white p-5 sm:p-8 rounded-3xl border border-slate-200 shadow-sm">
             <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 mb-8">
                 <div>
                     <span class="text-xs font-bold uppercase tracking-widest text-cyan-600 bg-cyan-50 px-3 py-1 rounded-full">Elite Network</span>
@@ -479,7 +485,7 @@
                     <p class="text-slate-500 text-sm mt-1">Connect instantly with verified experts, consultants, developers, and trusted service providers.</p>
                 </div>
                 <div class="flex items-center gap-3 w-full md:w-auto">
-                    <input type="text" id="talentSearchInput" onkeyup="filterTalentCards()" placeholder="Search skill or name..." class="px-4 py-2 bg-slate-100 rounded-xl text-xs outline-none border border-slate-200 w-full md:w-64">
+                    <input type="text" id="talentSearchInput" onkeyup="filterTalentCards()" placeholder="Search skill or name..." class="px-4 py-2 bg-slate-100 rounded-xl text-xs outline-none border border-slate-200 w-full min-w-0 md:w-64">
                     <button onclick="openModal('talentModal')" class="accent-gradient text-white px-5 py-2.5 rounded-xl text-xs font-semibold shadow-md whitespace-nowrap">
                         + List Your Profile
                     </button>
@@ -503,7 +509,7 @@
                         </div>
                         <p class="text-slate-600 text-xs mb-4">Specialized in scalable cloud applications, high-performance web systems, and secure API integrations.</p>
                     </div>
-                    <div class="flex items-center justify-between pt-4 border-t border-slate-200">
+                    <div class="flex flex-wrap items-center justify-between gap-2 pt-4 border-t border-slate-200">
                         <span class="text-xs font-bold text-slate-700">$95/hr <span class="text-[10px] text-slate-400 font-normal">or project</span></span>
                         <button onclick="connectWithTalent('Sarah Miller')" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-semibold shadow transition">
                             Connect Now
@@ -526,7 +532,7 @@
                         </div>
                         <p class="text-slate-600 text-xs mb-4">Expert in global supply chain pricing negotiations, vendor matching, and e-commerce growth strategies.</p>
                     </div>
-                    <div class="flex items-center justify-between pt-4 border-t border-slate-200">
+                    <div class="flex flex-wrap items-center justify-between gap-2 pt-4 border-t border-slate-200">
                         <span class="text-xs font-bold text-slate-700">$120/hr <span class="text-[10px] text-slate-400 font-normal">or project</span></span>
                         <button onclick="connectWithTalent('David Klein')" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-semibold shadow transition">
                             Connect Now
@@ -549,7 +555,7 @@
                         </div>
                         <p class="text-slate-600 text-xs mb-4">Crafting gorgeous, intuitive digital experiences, high-conversion landing pages, and interactive brand identities.</p>
                     </div>
-                    <div class="flex items-center justify-between pt-4 border-t border-slate-200">
+                    <div class="flex flex-wrap items-center justify-between gap-2 pt-4 border-t border-slate-200">
                         <span class="text-xs font-bold text-slate-700">$85/hr <span class="text-[10px] text-slate-400 font-normal">or project</span></span>
                         <button onclick="connectWithTalent('Elena Rostova')" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-semibold shadow transition">
                             Connect Now
@@ -568,43 +574,43 @@
                 <h2 class="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">Your favorites &amp; visited</h2>
                 <a href="#local-stores" class="text-sm font-semibold text-blue-600 hover:underline flex items-center gap-1">See All <i class="fa-solid fa-chevron-right text-xs"></i></a>
             </div>
-            <div class="fav-scroll flex gap-4 overflow-x-auto pb-1 px-1 -mx-1">
-                <button type="button" class="fav-tile shrink-0" onclick="favNational('Target')" aria-label="Target">
+            <div class="fav-scroll flex gap-4 overflow-x-auto overflow-y-hidden pb-1 px-1 -mx-1 snap-x snap-mandatory">
+                <button type="button" class="fav-tile shrink-0 snap-start" onclick="favNational('Target')" aria-label="Target">
                     <span class="glass-tile flex items-center justify-center w-36 h-24 sm:w-40 sm:h-28 p-3">
                         <span class="w-full h-full rounded-xl flex items-center justify-center text-white font-extrabold text-xl tracking-tight shadow-inner" style="background:#cc0000;">target</span>
                     </span>
                 </button>
-                <button type="button" class="fav-tile shrink-0" onclick="favNational('Walmart')" aria-label="Walmart">
+                <button type="button" class="fav-tile shrink-0 snap-start" onclick="favNational('Walmart')" aria-label="Walmart">
                     <span class="glass-tile flex items-center justify-center w-36 h-24 sm:w-40 sm:h-28 p-3">
                         <span class="w-full h-full rounded-xl flex items-center justify-center text-white font-extrabold text-lg tracking-tight shadow-inner" style="background:#0071ce;">Walmart</span>
                     </span>
                 </button>
-                <button type="button" class="fav-tile shrink-0" onclick="favNational('AliExpress')" aria-label="AliExpress">
+                <button type="button" class="fav-tile shrink-0 snap-start" onclick="favNational('AliExpress')" aria-label="AliExpress">
                     <span class="glass-tile flex items-center justify-center w-36 h-24 sm:w-40 sm:h-28 p-3">
                         <span class="w-full h-full rounded-xl flex items-center justify-center text-white font-extrabold text-base tracking-tight shadow-inner" style="background:#e62e04;">AliExpress</span>
                     </span>
                 </button>
-                <button type="button" class="fav-tile shrink-0" onclick="favNational('QVC')" aria-label="QVC">
+                <button type="button" class="fav-tile shrink-0 snap-start" onclick="favNational('QVC')" aria-label="QVC">
                     <span class="glass-tile flex items-center justify-center w-36 h-24 sm:w-40 sm:h-28 p-3">
                         <span class="w-full h-full rounded-xl flex items-center justify-center text-white font-extrabold text-2xl tracking-widest shadow-inner" style="background:#002d62;">QVC</span>
                     </span>
                 </button>
-                <button type="button" class="fav-tile shrink-0" onclick="favNational('Priceline')" aria-label="Priceline">
+                <button type="button" class="fav-tile shrink-0 snap-start" onclick="favNational('Priceline')" aria-label="Priceline">
                     <span class="glass-tile flex items-center justify-center w-36 h-24 sm:w-40 sm:h-28 p-3">
                         <span class="w-full h-full rounded-xl flex items-center justify-center text-white font-extrabold text-lg tracking-tight shadow-inner" style="background:#0068ef;">priceline</span>
                     </span>
                 </button>
-                <button type="button" class="fav-tile shrink-0" onclick="favNational('H&M')" aria-label="H&M">
+                <button type="button" class="fav-tile shrink-0 snap-start" onclick="favNational('H&M')" aria-label="H&M">
                     <span class="glass-tile flex items-center justify-center w-36 h-24 sm:w-40 sm:h-28 p-3">
                         <span class="w-full h-full rounded-xl flex items-center justify-center text-white font-extrabold text-2xl tracking-tight shadow-inner" style="background:#e50010;">H&amp;M</span>
                     </span>
                 </button>
-                <button type="button" class="fav-tile shrink-0" onclick="favGoLocal('Rockland Kosher Supermarket')" aria-label="Rockland Kosher Supermarket">
+                <button type="button" class="fav-tile shrink-0 snap-start" onclick="favGoLocal('Rockland Kosher Supermarket')" aria-label="Rockland Kosher Supermarket">
                     <span class="glass-tile flex items-center justify-center w-36 h-24 sm:w-40 sm:h-28 p-3">
                         <span class="w-full h-full rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-white font-extrabold text-3xl shadow-inner">RK</span>
                     </span>
                 </button>
-                <button type="button" class="fav-tile shrink-0" onclick="favGoLocal('Pharmacy Plus')" aria-label="Pharmacy Plus">
+                <button type="button" class="fav-tile shrink-0 snap-start" onclick="favGoLocal('Pharmacy Plus')" aria-label="Pharmacy Plus">
                     <span class="glass-tile flex items-center justify-center w-36 h-24 sm:w-40 sm:h-28 p-3">
                         <span class="w-full h-full rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-extrabold text-3xl shadow-inner">P+</span>
                     </span>
@@ -618,8 +624,8 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-4 gap-10 mb-12">
             <div>
                 <div class="mb-4">
-                    <div class="h-12 w-40 overflow-hidden flex items-center justify-start">
-                        <img src="assets/logo-nexamatch-dark.jpg" alt="NexaMatch" class="h-12 w-auto max-w-none" style="transform: scale(2.05);">
+                    <div class="h-10 w-32 sm:h-12 sm:w-40 max-w-[60vw] overflow-hidden flex items-center justify-start">
+                        <img src="assets/logo-nexamatch-dark.jpg" alt="NexaMatch" class="h-10 sm:h-12 w-auto max-w-none" style="transform: scale(2.05);">
                     </div>
                 </div>
                 <p class="text-xs leading-relaxed text-slate-400 mb-4">
@@ -653,7 +659,7 @@
                 <h4 class="text-white text-sm font-semibold mb-4 uppercase tracking-wider">Stay Updated</h4>
                 <p class="text-xs text-slate-400 mb-3">Subscribe for weekly high-saving deals and top talent matches.</p>
                 <div class="flex gap-2">
-                    <input type="email" placeholder="Your email address" class="bg-slate-800 border border-slate-700 px-3 py-2 rounded-xl text-xs text-white outline-none flex-1">
+                    <input type="email" placeholder="Your email address" class="bg-slate-800 border border-slate-700 px-3 py-2 rounded-xl text-xs text-white outline-none flex-1 min-w-0">
                     <button onclick="showToast('Thank you for subscribing!')" class="accent-gradient text-white px-4 py-2 rounded-xl text-xs font-bold">Join</button>
                 </div>
             </div>
@@ -664,14 +670,14 @@
     </footer>
 
     <!-- Interactive Toast Notification -->
-    <div id="toast" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 bg-slate-900 text-white px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-3 border border-slate-800 text-xs sm:text-sm">
+    <div id="toast" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 bg-slate-900 text-white px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-3 border border-slate-800 text-xs sm:text-sm max-w-[calc(100vw-2.5rem)]">
         <i class="fa-solid fa-circle-check text-cyan-400 text-base"></i>
         <span id="toastMsg">Action completed successfully!</span>
     </div>
 
     <!-- Generic Modal Dialog -->
     <div id="genericModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden items-center justify-center p-4">
-        <div class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl transform scale-95 transition-all duration-300 relative" id="modalContentBox">
+        <div class="bg-white rounded-3xl max-w-md w-full max-h-[90vh] overflow-y-auto p-6 sm:p-8 shadow-2xl transform scale-95 transition-all duration-300 relative" id="modalContentBox">
             <button onclick="closeModal()" class="absolute top-5 right-5 text-slate-400 hover:text-slate-700 font-bold text-lg">&times;</button>
             <div id="modalBody">
                 <!-- Dynamic Modal Content -->
@@ -710,12 +716,12 @@
             const input = document.getElementById('heroQueryInput');
 
             if (mode === 'products') {
-                tabProd.className = "flex-1 py-3 px-4 rounded-xl font-semibold text-sm transition flex items-center justify-center gap-2 bg-white text-slate-900 shadow-md";
-                tabConn.className = "flex-1 py-3 px-4 rounded-xl font-semibold text-sm transition flex items-center justify-center gap-2 text-white hover:bg-white/10";
+                tabProd.className = "flex-1 min-w-0 py-3 px-2 sm:px-4 rounded-xl font-semibold text-xs sm:text-sm leading-tight transition flex items-center justify-center gap-2 bg-white text-slate-900 shadow-md";
+                tabConn.className = "flex-1 min-w-0 py-3 px-2 sm:px-4 rounded-xl font-semibold text-xs sm:text-sm leading-tight transition flex items-center justify-center gap-2 text-white hover:bg-white/10";
                 input.placeholder = "Search brands like Target, Samsung, Expedia, or QVC...";
             } else {
-                tabConn.className = "flex-1 py-3 px-4 rounded-xl font-semibold text-sm transition flex items-center justify-center gap-2 bg-white text-slate-900 shadow-md";
-                tabProd.className = "flex-1 py-3 px-4 rounded-xl font-semibold text-sm transition flex items-center justify-center gap-2 text-white hover:bg-white/10";
+                tabConn.className = "flex-1 min-w-0 py-3 px-2 sm:px-4 rounded-xl font-semibold text-xs sm:text-sm leading-tight transition flex items-center justify-center gap-2 bg-white text-slate-900 shadow-md";
+                tabProd.className = "flex-1 min-w-0 py-3 px-2 sm:px-4 rounded-xl font-semibold text-xs sm:text-sm leading-tight transition flex items-center justify-center gap-2 text-white hover:bg-white/10";
                 input.placeholder = "Search expert talent, developers, consultants, or contacts...";
             }
         }
@@ -799,9 +805,9 @@
                         </div>
                         <h3 class="text-xl font-bold text-slate-900 mb-2">Refer Friends & Earn $50+</h3>
                         <p class="text-xs text-slate-500 mb-6">Share your unique link with friends. When they make their first purchase or connection, you both receive bonus rewards!</p>
-                        <div class="bg-slate-100 p-3 rounded-xl flex items-center justify-between mb-6">
-                            <span class="text-xs font-mono text-slate-700">https://nexamatch.com/invite/user99</span>
-                            <button onclick="showToast('Invite link copied to clipboard!')" class="accent-gradient text-white px-3 py-1.5 rounded-lg text-xs font-semibold shadow">Copy</button>
+                        <div class="bg-slate-100 p-3 rounded-xl flex items-center justify-between gap-2 mb-6">
+                            <span class="text-xs font-mono text-slate-700 min-w-0 break-all text-left">https://nexamatch.com/invite/user99</span>
+                            <button onclick="showToast('Invite link copied to clipboard!')" class="accent-gradient text-white px-3 py-1.5 rounded-lg text-xs font-semibold shadow shrink-0">Copy</button>
                         </div>
                         <button onclick="closeModal()" class="w-full py-2.5 bg-slate-900 text-white rounded-xl text-xs font-semibold">Got it</button>
                     </div>
@@ -991,7 +997,7 @@
                         <p class="text-xs text-slate-500 mt-1"><i class="fa-solid fa-location-dot mr-1 text-slate-400"></i>${s.address}</p>
                     </div>
                 </div>
-                <div class="flex items-center justify-between mt-4 pt-4 border-t border-slate-200">
+                <div class="flex flex-wrap items-center justify-between gap-2 mt-4 pt-4 border-t border-slate-200">
                     <span class="text-emerald-600 font-extrabold text-sm">2% Cash Back</span>
                     ${action}
                 </div>
